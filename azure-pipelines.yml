@@ -32,7 +32,7 @@ jobs:
   displayName: Deploy to VM
   environment: 
    name: EnvCvalverd
-   resourceName: EnvCvalverd
+   resourceName: miVM
    resourceType: virtualMachine
   strategy:
      runOnce:
