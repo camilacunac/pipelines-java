@@ -3,20 +3,38 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
+#trigger:
+#- main
+
+#pool:
+#  vmImage: ubuntu-latest
+
+#steps:
+#- task: Maven@4
+#  inputs:
+#    mavenPomFile: 'pom.xml'
+#    mavenOptions: '-Xmx3072m'
+#    javaHomeOption: 'JDKVersion'
+#    jdkVersionOption: '1.8'
+#    jdkArchitectureOption: 'x64'
+#    publishJUnitResults: true
+#    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+#    goals: 'package'
+
 trigger:
 - main
-
 pool:
-  vmImage: ubuntu-latest
-
+vmImage: ubuntu-latest
+16
+jobs:
+- deployment: VMDeploy
+displayName: Deploy to VM
+environment:
+name: EnvCvalverd
+resourceName: EnvCvalverd
+resourceType: virtualMachine
+strategy:
+runOnce:
+deploy:
 steps:
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+- script: echo "Hello world"
