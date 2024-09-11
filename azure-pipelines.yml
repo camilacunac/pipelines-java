@@ -6,36 +6,25 @@
 trigger:
 - main
 
-pool:
- vmImage: ubuntu-latest
+stages:
+  - stage: DeployToVM
+    jobs:
+    - deployment: InstallApacheAndConfigure
+      displayName: "Instalar Apache y Configurar Página"
+      environment:
+        name: "Grupo13VM" # Nombre de tu entorno
+        resourceType: VirtualMachine # Tipo de recurso, en este caso una máquina virtual
 
-steps:
-- task: Maven@4
-  inputs:
-   mavenPomFile: 'pom.xml'
-   mavenOptions: '-Xmx3072m'
-   javaHomeOption: 'JDKVersion'
-   jdkVersionOption: '1.8'
-   jdkArchitectureOption: 'x64'
-   publishJUnitResults: true
-   testResultsFiles: '**/surefire-reports/TEST-*.xml'
-   goals: 'package'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script: |
+                echo "Iniciando Instalación de Apache..."
+                sudo apt-get update
+                sudo apt-get install -y apache2
+                echo "Hola Estudiantes, Hemos configurado la administración y toma de control de la máquina virtual desde Azure DevOps con código automatizado para cumplir con el CI/CD!" | sudo tee /var/www/html/index.html
+                sudo systemctl restart apache2
+              displayName: "Instalación y configuración completadas."
+            - script: echo "Instalar Apache y Configurar Mensaje"
 
-# trigger: 
-# - main
-
-# pool: 
-#    vmImage: ubuntu-latest
-
-# jobs:
-# - deployment: VMDeploy
-#   displayName: Deploy to VM
-#   environment: 
-#    name: MiEnv
-#    resourceName: ejemploVM
-#    resourceType: virtualMachine
-#   strategy:
-#      runOnce:
-#         deploy:   
-#           steps:
-#             - script: echo "Hello world"
